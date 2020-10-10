@@ -16,11 +16,11 @@
      * @Method({"GET"})
      */
     public function index() {
-      // return new Response("
-      //   <body>
-      //     <h1>Hello Symfony</h1>
-      //   </body>
-      // ");
-      return $this->render('articles/index.html.twig');
+      // Return static response:
+      // return new Response("<body><h1>Hello Symfony</h1></body>");
+
+      $articles = ['Article 1', 'Article 2'];
+
+      return $this->render('articles/index.html.twig', array('name' => 'Andy', 'articles' => $articles));
     }
   }
