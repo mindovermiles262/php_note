@@ -18,10 +18,30 @@ This application uses:
 ## Up and Running
 
 ```
+# Start the MySQL Database:
+$ docker-compose up -d
+
 $ cd app
 
 app$ ./bin/composer.phar install
 app$ ./bin/symfony server:start
+```
+
+## Database Migrations
+
+ORM and Database stuff is managed by `doctrine`.
+
+#### Create an Entity (Model)
+```
+app$ php bin/console make:entity NAME
+app$ php bin/console make:entity Article
+```
+
+#### Migrate the database changes
+
+```
+app$ php bin/console doctrine:migrations:diff
+app$ php bin/console doctrine:migrations:migrate
 ```
 
 ## Helpful Links
