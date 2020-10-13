@@ -13,22 +13,26 @@
   # Article Controller will extend twig controller
   class ArticleController extends AbstractController {
     /**
-     * @Route("/")
+     * @Route("/", name="artcile_index")
      * @Method({"GET"})
      */
+
     public function index() {
       // Return static response:
       // return new Response("<body><h1>Hello Symfony</h1></body>");
 
-      $articles = ['Article 1', 'Article 2'];
+      // $articles = ['Article 1', 'Article 2'];
+      $articles = $this->getDoctrine()->getRepository(Article::class)->findAll();
 
       return $this->render('articles/index.html.twig', array('name' => 'Andy', 'articles' => $articles));
     }
 
     /**
-     * @Route("/articles/save")
+     * @Route("/articles/save", name="article_save")
      */
+
     public function save() {
+      // Sets up GET route that writes to the Database
       // Set up Entity Manager (Doctrine) to interact with DB
       $entityManager = $this->getDoctrine()->getManager();
 
@@ -41,4 +45,21 @@
 
       return new Response('Saved an article with ID of '.$article->getId());
     }
+
+    /**
+     * @Route("/article/{id}", name="article_show")
+     */
+
+    public function show($id) {
+      $article = $this
+        ->getDoctrine()
+        ->getRepository(Article::class)
+        ->find($id);
+
+      return $this->render(
+        'articles/show.html.twig',
+        array('article' => $article)
+      );
+    }
+
   }

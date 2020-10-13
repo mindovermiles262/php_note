@@ -11,14 +11,16 @@
       <thead>
         <tr>
           <th>Article Title</th>
+          <th>Article Author</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody>
         {% for article in articles %}
         <tr>
-          <td>{{ article }}</td>
-          <td><a class="btn btn-dark" href="/article/1">Show</a></td>
+          <td>{{ article.title }}</td>
+          <td>{{ article.author }}</td>
+          <td><a class="btn btn-dark" href="/article/{{ article.id }}">Show</a></td>
         </tr>
         {% endfor %}
       </tbody>
