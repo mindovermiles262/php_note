@@ -27,11 +27,18 @@
 
       $articles = $this->getDoctrine()->getRepository(Article::class)->findAll();
 
-      return $this->render('articles/index.html.twig', array('name' => 'Andy', 'articles' => $articles));
+      return $this->render(
+        'articles/index.html.twig', 
+        array(
+          'name' => 'Andy', 
+          'articles' => $articles
+        )
+      );
     }
 
+
     /**
-     * @Route("/articles/save", name="article_save")
+     * @Route("/article/save", name="article_save")
      */
     public function save() {
       // Sets up GET route that writes to the Database
@@ -47,6 +54,7 @@
 
       return new Response('Saved an article with ID of '.$article->getId());
     }
+
 
     /**
      * @Route("/article/new", name="article_new")
@@ -99,6 +107,62 @@
           );
      }
 
+
+    /**
+     * @Route("/article/edit/{id}", name="article_edit")
+     * Method({"GET", "POST"})
+     */
+     public function edit(Request $request, $id) {
+        $article = new Article();
+
+        $article = $this
+          ->getDoctrine()
+          ->getRepository(Article::class)
+          ->find($id);
+
+        $form = $this->createFormBuilder($article)
+          ->add('title', TextType::class, array(
+            'attr' => array(
+              'class' => 'form-control'
+            )
+          ))
+          ->add('author', TextType::class, array(
+            'attr' => array(
+              'class' => 'form-control'
+            )
+          ))
+          ->add('body', TextareaType::class, array(
+            'required' => false,
+            'attr' => array(
+              'class' => 'form-control'
+            )
+          ))
+          ->add('save', SubmitType::class, array(
+            'label' => 'Create',
+            'attr' => array(
+              'class' => 'btn btn-primary mt-3'
+            )
+          ))
+          ->getForm();
+
+          $form->handleRequest($request);
+
+          if($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->flush(); 
+
+            // 'article_index' is the name of the index() route
+            return $this->redirectToRoute('article_index'); 
+          }
+
+          return $this->render(
+            'articles/edit.html.twig', array(
+              'form' => $form->createView()
+            )
+          );
+     }
+
+
      /**
       * @Route("/article/delete/{id}")
       * Method({"DELETE"})
@@ -116,6 +180,7 @@
         $response = new Response();
         $response->send();
     }
+
 
     /**
      * @Route("/article/{id}", name="article_show")
